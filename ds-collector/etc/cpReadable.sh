@@ -19,24 +19,32 @@ if [ -z "${sourceDir}" -o -z "${targetDir}" ]; then
   _usage
 fi
 
-if [ ! -d ${sourceDir} -o -f ${targetDir} ]; then
+if [ ! -d "${sourceDir}" -o -f "${targetDir}" ]; then
   _usage
 fi
 
-if [ ! -d ${targetDir} ]; then
-  mkdir -p ${targetDir}
-  if [ ! -d ${targetDir} ]; then
+if [ ! -d "${targetDir}" ]; then
+  mkdir -p "${targetDir}"
+  if [ ! -d "${targetDir}" ]; then
     _usage
   fi
 fi
 
-findArgs=""
+findArgs=()
 if [ "x" != "x${maxAgeDays}" ]; then
-    findArgs="-mtime -${maxAgeDays}"
+    findArgs=(-mtime "-${maxAgeDays}")
 fi
 
-rm -rf ${targetDir}
-mkdir -p ${targetDir}
-cd ${sourceDir}
-for DIR in $(find . -type d | sed 's|\.||;s|/||;/^$/d'); do mkdir -p ${targetDir}/$DIR; done
-for FILE in $(find . \( -type l -o -type f \) -readable ${findArgs} | sed 's|\.||;s|/||;/^$/d'); do cp -f -L $FILE ${targetDir}/$FILE; done
+rm -rf "${targetDir}"
+mkdir -p "${targetDir}"
+cd "${sourceDir}"
+
+while IFS= read -r -d '' DIR; do
+  mkdir -p "${targetDir}/${DIR#./}"
+done < <(find . -type d -print0)
+
+while IFS= read -r -d '' FILE; do
+  FILE="${FILE#./}"
+  mkdir -p "$(dirname "${targetDir}/${FILE}")"
+  cp -f -L "${FILE}" "${targetDir}/${FILE}"
+done < <(find . \( -type l -o -type f \) -readable "${findArgs[@]}" -print0)
