@@ -925,7 +925,7 @@ EOF
 # shellcheck disable=SC2086
 set_ssh_options() {
   if [ -z $userName ]; then userName="$defaultUserName"; fi
-  if [ -z $sshArgs ]; then
+  if [ -z "$sshArgs" ]; then
     if [ "$sshOptionHostkeyCheck" = "false" ]; then sshArgs="$sshArgs -oStrictHostKeyChecking=no"; fi
     if [ "$sshOptionAgentForwarding" = "true" ]; then sshArgs="$sshArgs -A"; fi
     if [ $sshIdentity ]; then sshArgs="$sshArgs -i $sshIdentity" ; fi
@@ -938,7 +938,7 @@ set_ssh_options() {
 # shellcheck disable=SC2086
 set_scp_options() {
   if [ -z $userName ]; then userName="$defaultUserName"; fi
-  if [ -z $scpArgs ]; then
+  if [ -z "$scpArgs" ]; then
     if [ $sshIdentity ]; then scpArgs="$scpArgs -i $sshIdentity" ; fi
     if [ "$sshOptionVerbose" = "true" ]; then scpArgs="$scpArgs -v"; fi
   fi
