@@ -139,6 +139,16 @@
 #keyId=""
 #keySecret=""
 
+# s3 bucket
+# overrides the bucket baked in at build time (or the "collector-dead-drop" default)
+#
+#bucket=""
+
+# optional path prefix inside the bucket, useful when sharing a multi-tenant bucket
+# with other tools/teams, e.g. s3Prefix="ds-collector"
+#
+#s3Prefix=""
+
 # s3 auth
 # default is to use s3Auth to upload
 #

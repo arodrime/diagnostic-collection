@@ -426,7 +426,7 @@ s3_push() {
   dstFileName="$2"
   s3Date="$(LC_ALL=C date -u +"%a, %d %b %Y %X %z")"
   timestamp="$3"
-  resource="/${bucket}/${issueId%-*}/${issueId}-${clusterName}-${timestamp}/${dstFileName}"
+  resource="/${bucket}/${s3Prefix:+${s3Prefix%/}/}${issueId%-*}/${issueId}-${clusterName}-${timestamp}/${dstFileName}"
   contentType="$4"
   stringToSign="PUT\n\n${contentType}\n${s3Date}\n${resource}"
   signature=$(echo -en "${stringToSign}" | openssl sha1 -hmac "${keySecret}" -binary | base64)
@@ -436,7 +436,7 @@ s3_push() {
         -H "Date: ${s3Date}" \
         -H "Content-Type: ${contentType}" \
         -H "Authorization: AWS ${keyId}:${signature}" \
-        https://"${bucket}.s3.amazonaws.com/${issueId%-*}/${issueId}-${clusterName}-${timestamp}/${dstFileName}" ; do
+        https://"${bucket}.s3.amazonaws.com/${s3Prefix:+${s3Prefix%/}/}${issueId%-*}/${issueId}-${clusterName}-${timestamp}/${dstFileName}" ; do
     ((c++)) && ((c==10)) && c=0 && statusState=1 && break
     echo "curl … ${srcFilePath} … failed… trying again (${c})… "
     sleep 1
