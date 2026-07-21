@@ -149,6 +149,28 @@
 #
 #s3Prefix=""
 
+# s3-compatible endpoint, useful for on-prem/private object stores (e.g. Dell ECS, MinIO)
+# instead of AWS. Defaults to "s3.amazonaws.com"
+#
+#s3Endpoint="ecs.example.com:9021"
+
+# addressing style for the endpoint above:
+#  false (default) -> virtual-hosted style: https://<bucket>.<s3Endpoint>/<key>
+#  true             -> path style:          https://<s3Endpoint>/<bucket>/<key>
+# path style is generally required for private endpoints without a wildcard DNS entry per bucket
+#
+#s3PathStyle="true"
+
+# path to a CA bundle to trust when the s3Endpoint above uses a certificate
+# not signed by a public CA (common for on-prem object stores)
+#
+#s3CaCert="/etc/pki/ca-trust/my-internal-ca.pem"
+
+# skip TLS certificate verification entirely, e.g. for testing against a
+# self-signed endpoint. Prefer s3CaCert above whenever possible
+#
+#s3Insecure="true"
+
 # s3 auth
 # default is to use s3Auth to upload
 #
